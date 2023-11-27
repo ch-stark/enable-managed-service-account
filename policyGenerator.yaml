@@ -1,0 +1,30 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: setupmsa
+placementBindingDefaults:
+  name: setupmsa-placement-binding
+policyDefaults:
+  namespace: policies
+  placement:
+    placementName: setup-msa-placement
+  remediationAction: enforce
+  policySets:
+  - setup-msa-policyset
+  severity: medium
+  ignorePending: true
+policies:
+  - name: policy-setup-mce
+    manifests:
+      - path: input/mce
+    remediationAction: enforce
+  - name: policy-setup-msa
+    manifests:
+      - path: input/clusters
+    remediationAction: inform
+    dependencies:
+    - name: "policy-setup-mcs"
+      compliance: "Compliant"
+      kind: "Policy"
+   
+   
