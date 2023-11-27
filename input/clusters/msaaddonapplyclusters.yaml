@@ -17,4 +17,13 @@ spec:
           namespace: {{ .metadata.name }}
         spec:
           installNamespace: open-cluster-management-agent-addon
+    - complianceType: musthave
+      objectDefinition:
+        apiVersion: authentication.open-cluster-management.io/v1alpha1
+        kind: ManagedServiceAccount
+        metadata:
+          name: {{ .metadata.name }}
+          namespace: {{ .metadata.name }}
+        spec:
+          rotation: {} 
     {{- end }}
