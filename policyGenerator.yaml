@@ -21,9 +21,17 @@ policies:
   - name: policy-setup-msa
     manifests:
       - path: input/clusters
-    remediationAction: inform
+    remediationAction: enforce
     dependencies:
     - name: "policy-setup-mce"
+      compliance: "Compliant"
+      kind: "Policy"
+  - name: policy-setup-permissions
+    manifests:
+      - path: input/permissions
+    remediationAction: enforce
+    dependencies:
+    - name: "policy-setup-msa"
       compliance: "Compliant"
       kind: "Policy"
    

@@ -1,0 +1,67 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: policy-gitops-sub
+spec:
+  pruneObjectBehavior: None
+  remediationAction: enforce
+  severity: low
+  object-templates-raw: |
+    {{ range $placedec := (lookup "cluster.open-cluster-management.io/v1beta1" "PlacementDecision" "openshift-gitops" "" "cluster.open-cluster-management.io/placement=my-placement").items }}
+    {{ range $clustdec := $placedec.status.decisions }}
+    - complianceType: musthave
+      objectDefinition:
+        apiVersion: rbac.open-cluster-management.io/v1alpha1
+        kind: ClusterPermission
+        metadata:
+          name: clusterpermission-msa-subject-sample
+          namespace: {{ $clustdec.clusterName }}
+        spec:
+          roles:
+          - namespace: default
+            rules:
+            - apiGroups: ["apps"]
+              resources: ["deployments"]
+              verbs: ["get", "list", "create", "update", "delete"]
+            - apiGroups: [""]
+              resources: ["configmaps", "secrets", "pods", "podtemplates", "persistentvolumeclaims", "persistentvolumes"]
+              verbs: ["get", "update", "list", "create", "delete"]
+            - apiGroups: ["storage.k8s.io"]
+              resources: ["*"]
+              verbs: ["list"]
+            - namespace: mortgage
+            rules:
+            - apiGroups: ["apps"]
+              resources: ["deployments"]
+              verbs: ["get", "list", "create", "update", "delete"]
+            - apiGroups: [""]
+              resources: ["configmaps", "secrets", "pods", "services", "namespace"]
+              verbs: ["get", "update", "list", "create", "delete"]
+           clusterRole:
+             rules:
+             - apiGroups: ["*"]
+               resources: ["*"]
+               verbs: ["get", "list"]
+            roleBindings:
+            - namespace: default
+              roleRef:
+                kind: Role
+              subject:
+                apiGroup: authentication.open-cluster-management.io
+                kind: ManagedServiceAccount
+                name: managed-sa-sample
+           - namespace: mortgage
+             roleRef:
+               kind: Role
+             subject:
+               apiGroup: authentication.open-cluster-management.io
+               kind: ManagedServiceAccount
+               name: managed-sa-sample
+           clusterRoleBinding:
+             subject:
+               apiGroup: authentication.open-cluster-management.io
+               kind: ManagedServiceAccount
+               name: managed-sa-sample
+            {{ end }}
+            {{ end }}
+
