@@ -6,7 +6,7 @@
       spec:
         remediationAction: enforce
         severity: medium
-          object-templates-raw: |
+        object-templates-raw: |
           {{- range (lookup "cluster.open-cluster-management.io/v1" "ManagedCluster" "" "").items }}
           - complianceType: musthave
             objectDefinition:
@@ -15,6 +15,6 @@
 	            metadata:
 	              name: managed-serviceaccount
 	              namespace: {{ .metadata.name }}
-	          spec:
-	            installNamespace: open-cluster-management-agent-addon
+	            spec:
+	              installNamespace: open-cluster-management-agent-addon
           {{- end }}
