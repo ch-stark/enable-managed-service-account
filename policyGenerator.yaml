@@ -23,7 +23,7 @@ policies:
       - path: input/clusters
     remediationAction: inform
     dependencies:
-    - name: "policy-setup-mcs"
+    - name: "policy-setup-mce"
       compliance: "Compliant"
       kind: "Policy"
    
