@@ -10,7 +10,7 @@ spec:
     {{- range (lookup "cluster.open-cluster-management.io/v1" "ManagedCluster" "" "").items }}
     - complianceType: musthave
       objectDefinition:
-        apiVersion: addon.open-cluster-management.io/v
+        apiVersion: addon.open-cluster-management.io/v1alpha1
         kind: ManagedClusterAddOn
         metadata:
           name: managed-serviceaccount
